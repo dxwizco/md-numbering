@@ -1,41 +1,4 @@
 // src/numbering.ts
-
-// import { LogicalHeading } from "./types";
-
-// export interface NumberingOptions {
-//   startLevel: number;
-// }
-
-// export function assignNumbers(
-//   roots: LogicalHeading[],
-//   options: NumberingOptions = { startLevel: 1 },
-// ): void {
-//   const startLevel = Math.max(1, Math.min(6, options.startLevel));
-
-//   const numberedRoots = roots.filter((root) => root.level >= startLevel);
-
-//   for (let i = 0; i < numberedRoots.length; i++) {
-//     assignChildNumbers(numberedRoots[i], [i + 1], startLevel);
-//   }
-// }
-
-// function assignChildNumbers(
-//   node: LogicalHeading,
-//   parentNumber: number[],
-//   startLevel: number,
-// ): void {
-//   node.number = [...parentNumber];
-
-//   const children = node.children.filter((child) => child.level >= startLevel);
-
-//   for (let i = 0; i < children.length; i++) {
-//     const childNumber = [...parentNumber, i + 1];
-
-//     assignChildNumbers(children[i], childNumber, startLevel);
-//   }
-// }
-
-// === DX: Present-2
 import { LogicalHeading } from "./types";
 
 export interface NumberingOptions {
@@ -59,66 +22,51 @@ export function assignNumbers(
     throw new Error("startLevel must be an integer between 1 and 6");
   }
 
-  assignChildren(roots, startLevel, []);
+  const counters: number[] = [];
+
+  assignNodes(roots, startLevel, counters, []);
 }
 
-function assignChildren(
+function assignNodes(
   nodes: LogicalHeading[],
   startLevel: number,
+  counters: number[],
   parentNumber: number[],
 ): void {
-  let siblingNumber = 0;
-
   for (const node of nodes) {
     if (node.level < startLevel) {
       /*
-       * This heading is structurally present but is not numbered.
+       * Structurally present but not numbered.
        *
-       * Its children continue using the same logical numbering parent.
+       * Its children continue from the same logical numbering
+       * context rather than starting a new counter.
        */
       node.number = [];
 
-      assignChildren(node.children, startLevel, parentNumber);
+      assignNodes(node.children, startLevel, counters, parentNumber);
       continue;
     }
 
-    siblingNumber++;
+    /*
+     * This is a numbered logical heading.
+     *
+     * The counter is associated with the logical depth, not
+     * with the physical heading level.
+     */
+    const depth = parentNumber.length;
 
-    const nodeNumber = [...parentNumber, siblingNumber];
+    counters[depth] = (counters[depth] ?? 0) + 1;
+
+    /*
+     * Reset deeper counters because we are starting a new
+     * sibling branch at this depth.
+     */
+    counters.length = depth + 1;
+
+    const nodeNumber = [...parentNumber, counters[depth]];
 
     node.number = nodeNumber;
 
-    assignChildren(node.children, startLevel, nodeNumber);
+    assignNodes(node.children, startLevel, counters, nodeNumber);
   }
 }
-
-// // === DX: Working
-// import { LogicalHeading } from "./types";
-
-// export function assignNumbers(roots: LogicalHeading[]): void {
-//   const counters: number[] = [];
-
-//   for (let i = 0; i < roots.length; i++) {
-//     counters[0] = i + 1;
-
-//     // Remove counters from deeper levels.
-//     counters.length = 1;
-
-//     assignChildNumbers(roots[i], counters);
-//   }
-// }
-
-// function assignChildNumbers(
-//   node: LogicalHeading,
-//   parentNumber: number[],
-// ): void {
-//   node.number = [...parentNumber];
-
-//   const children = node.children;
-
-//   for (let i = 0; i < children.length; i++) {
-//     const childNumber = [...parentNumber, i + 1];
-
-//     assignChildNumbers(children[i], childNumber);
-//   }
-// }

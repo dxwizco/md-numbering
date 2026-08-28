@@ -17,6 +17,7 @@ export function parseHeadings(markdown: string): Heading[] {
   const headings: Heading[] = [];
 
   let activeFence: string | null = null;
+  let activeHtmlComment = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -40,15 +41,41 @@ export function parseHeadings(markdown: string): Heading[] {
       continue;
     }
 
-    const match = line.match(HEADING_REGEX);
+    /*
+     * Ignore headings inside HTML comments.
+     *
+     * Important:
+     * A heading such as:
+     *
+     *   # Heading <!-- skip-all -->
+     *
+     * must still be parsed because the HTML comment is a numbering rule.
+     *
+     * We therefore only enter HTML-comment mode when the line itself
+     * is part of a comment block, not when the comment occurs after
+     * an actual heading.
+     */
+    if (activeHtmlComment) {
+      if (line.includes("-->")) {
+        activeHtmlComment = false;
+      }
 
-    if (!match) {
       continue;
     }
 
-    const level = match[1].length;
+    const headingMatch = line.match(HEADING_REGEX);
 
-    let text = match[2].trim();
+    if (!headingMatch) {
+      if (line.includes("<!--") && !line.includes("-->")) {
+        activeHtmlComment = true;
+      }
+
+      continue;
+    }
+
+    const level = headingMatch[1].length;
+
+    let text = headingMatch[2].trim();
 
     const existingNumber = extractHeadingNumber(text);
 

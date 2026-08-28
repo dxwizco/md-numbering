@@ -25,13 +25,40 @@ export function buildLogicalHierarchy(headings: Heading[]): LogicalHeading[] {
     }
 
     /*
+     * A skip heading is completely transparent to the logical
+     * hierarchy.
+     *
+     * IMPORTANT:
+     * Do not modify the stack here.
+     *
+     * This means:
+     *
+     *   ### A
+     *   #### B
+     *   ### C <!-- skip -->
+     *   #### D
+     *
+     * becomes:
+     *
+     *   A
+     *   ├── B
+     *   └── D
+     *
+     * Therefore B and D are siblings in the logical hierarchy.
+     */
+    if (heading.rule === "skip") {
+      continue;
+    }
+
+    /*
      * A skip-all heading starts a new skipped subtree.
+     *
+     * Unlike normal skip, skip-all DOES affect the physical
+     * hierarchy because its entire subtree must be ignored.
      */
     if (heading.rule === "skip-all") {
       skipAllLevel = heading.level;
 
-      // Remove any logical parents that cannot be ancestors
-      // of headings following this level.
       while (
         stack.length > 0 &&
         stack[stack.length - 1].level >= heading.level
@@ -44,21 +71,10 @@ export function buildLogicalHierarchy(headings: Heading[]): LogicalHeading[] {
 
     /*
      * Remove headings that are not physical ancestors of the
-     * current heading.
+     * current normal heading.
      */
     while (stack.length > 0 && stack[stack.length - 1].level >= heading.level) {
       stack.pop();
-    }
-
-    /*
-     * A skip heading is not added to the logical hierarchy.
-     *
-     * We intentionally do NOT push it onto the stack.
-     * Therefore its children will attach to the nearest
-     * surviving logical ancestor.
-     */
-    if (heading.rule === "skip") {
-      continue;
     }
 
     const node: LogicalHeading = {

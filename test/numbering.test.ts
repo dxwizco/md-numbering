@@ -348,4 +348,50 @@ describe("Markdown heading numbering", () => {
 
     expect(twice).toBe(once);
   });
+  it("continues numbering across root sections when start level is 2", () => {
+    const input = `# Project
+## Section
+### Normal
+## Next
+### Child
+# Second Project
+### Deep Child`;
+
+    const expected = `# Project
+## 1. Section
+### 1.1. Normal
+## 2. Next
+### 2.1. Child
+# Second Project
+### 3. Deep Child`;
+
+    expect(numberMarkdown(input, { startLevel: 2 })).toBe(expected);
+  });
+  it("continues numbering across root sections after skip-all with start level 2", () => {
+    const input = `# Project
+## Section
+### Normal
+## Ignored <!-- skip-all -->
+### Ignored child
+## Next
+### Child
+# Second Project
+### Skipped <!-- skip-all -->
+#### Ignored
+### Deep Child`;
+
+    const expected = `# Project
+## 1. Section
+### 1.1. Normal
+## Ignored <!-- skip-all -->
+### Ignored child
+## 2. Next
+### 2.1. Child
+# Second Project
+### Skipped <!-- skip-all -->
+#### Ignored
+### 3. Deep Child`;
+
+    expect(numberMarkdown(input, { startLevel: 2 })).toBe(expected);
+  });
 });

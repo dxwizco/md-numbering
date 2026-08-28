@@ -1,0 +1,57 @@
+{
+  "name": "md-numbering",
+  "displayName": "Markdown Numbering",
+  "description": "Automatic logical numbering for Markdown headings based on their logical hierarchy.",
+  "version": "0.1.0",
+  "publisher": "your-publisher-id",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.134.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:md-numbering.numberHeadings",
+    "onCommand:md-numbering.removeNumbering"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "md-numbering.numberHeadings",
+        "title": "Markdown Numbering: Number Headings"
+      },
+      {
+        "command": "md-numbering.removeNumbering",
+        "title": "Markdown Numbering: Remove Numbering"
+      }
+    ],
+    "configuration": {
+      "title": "Markdown Numbering",
+      "properties": {
+        "md-numbering.startLevel": {
+          "type": "number",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 6,
+          "description": "Heading level at which Markdown numbering starts."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./tsconfig.json",
+    "watch": "tsc -watch -p ./tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "@types/vscode": "^1.134.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}

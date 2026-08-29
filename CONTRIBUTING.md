@@ -325,3 +325,11 @@ A minimal reproduction makes parsing and numbering issues much easier to diagnos
 ## License
 
 By contributing to this project, you agree that your contributions will be licensed under the project's MIT License.
+
+## About
+
+Markdown Numbering is an open-source project created and maintained by **DXWIZ**.
+
+Learn more about DXWIZ at **[dxwiz.com](https://dxwiz.com)**.
+
+For questions or support, visit our **[Contact page](https://dxwiz.com/contact)**.

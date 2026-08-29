@@ -28,4 +28,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - `Markdown Numbering: Add Heading Numbers`
 - `Markdown Numbering: Remove Heading Numbers`
 
-[0.1.0]: https://github.com/your-publisher-or-user/md-numbering/releases/tag/v0.1.0
+[0.1.0]: https://github.com/dxwizco/md-numbering/releases/tag/v0.1.0

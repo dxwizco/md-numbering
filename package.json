@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "DXWIZ",
   "license": "MIT",
+  "icon": "./images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/dxwizco/md-numbering.git"
@@ -13,6 +14,10 @@
     "url": "https://github.com/dxwizco/md-numbering/issues"
   },
   "homepage": "https://github.com/dxwizco/md-numbering#readme",
+  "galleryBanner": {
+    "color": "#24292F",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -65,7 +70,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
-    "@types/vscode": "^1.134.0",
+    "@types/vscode": "1.85.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.9.2",

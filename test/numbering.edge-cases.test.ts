@@ -4,6 +4,7 @@ import { parseHeadings } from "../src/parser";
 import { buildLogicalHierarchy } from "../src/hierarchy";
 import { assignNumbers } from "../src/numbering";
 import { renderNumberedMarkdown } from "../src/renderer";
+import { removeNumbering } from "../src/remove";
 
 function numberMarkdown(
   markdown: string,
@@ -810,5 +811,94 @@ Another paragraph.`;
 ### 1.1.1. Real Child`;
 
     expect(numberMarkdown(input)).toBe(expected);
+  });
+  it("remove ignores fenced code blocks", () => {
+    const input = `# 1. Real Heading
+
+\`\`\`md
+# 2. Fake Heading
+## 2.1. Fake Section
+### 2.1.1. Fake Child
+\`\`\`
+
+## 1.1. Real Section`;
+
+    const expected = `# Real Heading
+
+\`\`\`md
+# 2. Fake Heading
+## 2.1. Fake Section
+### 2.1.1. Fake Child
+\`\`\`
+
+## Real Section`;
+
+    expect(removeNumbering(input)).toBe(expected);
+  });
+
+  it("remove ignores headings inside multiline HTML comments", () => {
+    const input = `<!--
+# 1. Commented Root
+## 1.1. Commented Section
+### 1.1.1. Commented Child
+-->
+
+# 1. Real Root
+## 1.1. Real Section`;
+
+    const expected = `<!--
+# 1. Commented Root
+## 1.1. Commented Section
+### 1.1.1. Commented Child
+-->
+
+# Real Root
+## Real Section`;
+
+    expect(removeNumbering(input)).toBe(expected);
+  });
+
+  it("remove ignores skip headings", () => {
+    const input = `# 1. Root
+## 99. Custom Section <!-- skip -->
+### 1.1. Child`;
+
+    const expected = `# Root
+## 99. Custom Section <!-- skip -->
+### Child`;
+
+    expect(removeNumbering(input)).toBe(expected);
+  });
+
+  it("remove ignores skip-all heading and its entire subtree", () => {
+    const input = `# 1. Root
+## 99. Custom Section <!-- skip-all -->
+### 99.1. Custom Child
+#### 99.1.1. Custom Grandchild
+## 1.1. Next`;
+
+    const expected = `# Root
+## 99. Custom Section <!-- skip-all -->
+### 99.1. Custom Child
+#### 99.1.1. Custom Grandchild
+## Next`;
+
+    expect(removeNumbering(input)).toBe(expected);
+  });
+
+  it("remove resumes after a skip-all subtree", () => {
+    const input = `# 1. Root
+## 99. Custom Section <!-- skip-all -->
+### 99.1. Custom Child
+## 1.1. Next
+### 1.1.1. Child`;
+
+    const expected = `# Root
+## 99. Custom Section <!-- skip-all -->
+### 99.1. Custom Child
+## Next
+### Child`;
+
+    expect(removeNumbering(input)).toBe(expected);
   });
 });

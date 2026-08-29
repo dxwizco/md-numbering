@@ -1,0 +1,16 @@
+.vscode/**
+.vscode-test/**
+test/**
+tests/**
+coverage/**
+node_modules/**
+.git/**
+.github/**
+.gitignore
+tsconfig.json
+vitest.config.*
+*.test.ts
+*.spec.ts
+pnpm-lock.yaml
+_docs/**
+*.log

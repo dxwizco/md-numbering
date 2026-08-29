@@ -1,13 +1,30 @@
 {
   "name": "md-numbering",
   "displayName": "Markdown Numbering",
-  "description": "Automatic logical numbering for Markdown headings based on their logical hierarchy.",
+  "description": "Automatically number Markdown headings based on their logical hierarchy.",
   "version": "0.1.0",
-  "publisher": "your-publisher-id",
+  "publisher": "DXWIZ",
   "license": "MIT",
-  "engines": {
-    "vscode": "^1.134.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dxwizco/md-numbering.git"
   },
+  "bugs": {
+    "url": "https://github.com/dxwizco/md-numbering/issues"
+  },
+  "homepage": "https://github.com/dxwizco/md-numbering#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "keywords": [
+    "markdown",
+    "heading",
+    "numbering",
+    "outline",
+    "documentation",
+    "formatting",
+    "table of contents"
+  ],
   "categories": [
     "Formatters"
   ],
@@ -20,11 +37,11 @@
     "commands": [
       {
         "command": "md-numbering.numberHeadings",
-        "title": "Markdown Numbering: Number Headings"
+        "title": "Markdown Numbering: Add Heading Numbers"
       },
       {
         "command": "md-numbering.removeNumbering",
-        "title": "Markdown Numbering: Remove Numbering"
+        "title": "Markdown Numbering: Remove Heading Numbers"
       }
     ],
     "configuration": {
@@ -51,6 +68,7 @@
     "@types/vscode": "^1.134.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^3.9.2",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }
